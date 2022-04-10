@@ -1,0 +1,35 @@
+demo
+yang_qwq
+yang_qwq
+0.05
+这是一个用来测试的demo曲谱{newline}欢迎大家踊跃投稿
+---（本行不读）
+d1
+r1
+m1
+f1
+s1
+l1
+t1
+
+d2
+r2
+m2
+f2
+s2
+l2
+t2
+
+d3
+r3
+m3
+f3
+s3
+l3
+t3
+
+d1 m1 s1
+r2 f2 l2
+d1 m2 s3
+
+d1 m1 s1 d2 m2 s2 d3 m3 s3
