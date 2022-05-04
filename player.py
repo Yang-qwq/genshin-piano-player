@@ -8,15 +8,8 @@ import os
 import yaml
 import ctypes
 
-__windir__ = os.getenv('windir')
-__driver_path__ = __windir__ + '\\System32\\DiagSvcs\\DiagnosticsHub.StandardCollector.Proxy.dll'
-__action_status__ = False
+__playing_status__ = False
 __pid__ = os.getpid()
-
-if not os.path.isfile(__driver_path__):
-    __driver_path__ = False
-else:
-    dd_dll = ctypes.windll.LoadLibrary(__driver_path__)
 
 dd_keys = {
     'c': 503,
@@ -128,8 +121,8 @@ class Song(object):
 
 
 def press(keys: list):
-    print(keys)
-    if __driver_path__ is not False and conf_enable_driver is True:
+    print('[%s]: %s %s' % (note_cursor, keys, '(driver=' + str(__driver_status__) + ')'))
+    if __driver_status__ is not False and conf_enable_driver is True:
         # 按下
         for key in keys:
             if key is not 'pass':
@@ -156,18 +149,31 @@ def f8exit():
 
 def main():
     global conf_enable_driver
-    global __action_status__
+    global __playing_status__
+    global dd_dll
+    global __driver_status__
+    global note_cursor
 
-    # 读取配置文件
+    # 读取配置
     with open('config.yml', 'r', encoding='utf-8') as f:
         conf = yaml.safe_load(f)
-    conf_enable_driver = conf['enable_driver']
+    conf_enable_driver = conf['driver']['enable']
     conf_enable_browser = conf['enable_browser']
     conf_browser_live = conf['browser_live_url']
+    conf_driver_path = conf['driver']['path']
+    print(conf_driver_path)
 
-    if conf_enable_driver is True and __driver_path__ is False:
-        print('驱动不可用！请将config.yml中的enable_driver项设为false或者修复相关dll！')
-        sys.exit(10)
+    # 判断驱动设置并加载它（未完成）
+    if conf_enable_driver is True:
+        try:
+            dd_dll = ctypes.windll.LoadLibrary(conf_driver_path)
+        except:
+            __driver_status__ = False
+        else:
+            print('驱动已启用')
+            __driver_status__ = True
+    else:
+        __driver_status__ = False
 
     print('准备中，请稍后...')
 
@@ -191,11 +197,13 @@ def main():
     keyboard.add_hotkey('f8', f8exit)
 
     # 开始
-    __action_status__ = True
+    __playing_status__ = True
+    note_cursor = 0
     for keys in map_data:
+        note_cursor += 1
         press(keys)
         time.sleep(song.get_speed())
-        if __action_status__ is not True:
+        if __playing_status__ is not True:
             break
 
     print('演奏完成！进程正在退出')

@@ -1,3 +1,5 @@
-enable_driver: false
+driver:
+  enable: false  # 在不知道您要做什么的情况下，请不要开启它
+  path: './dll/dd.dll'
 enable_browser: true
 browser_live_url: 'https://yuxiangwang0525.github.io/Windsong-piano/'
