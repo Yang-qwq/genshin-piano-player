@@ -1,0 +1,19 @@
+debug
+debug
+debug
+0.48
+map_id=0
+---
+m2
+s2
+d2 f1 l2
+d3
+r3
+s1 r2 t2
+s2
+f2
+l1 d2
+s2
+t2
+d1
+r2 s1
